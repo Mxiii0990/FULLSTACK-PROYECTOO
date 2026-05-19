@@ -2,7 +2,7 @@ package com.buildmypc.cpu_service.dto;
 import lombok.Data;
 
 @Data
-public class CpuRespondeDTO {
+public class CpuResponseDTO {
     private Long id;
     private Long componentId;
     private String socket;
