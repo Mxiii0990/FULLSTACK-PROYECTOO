@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Table(name = "componentes")
 //esta clase debe convertirse en una tabla llamada componentes en la base de datos Oracle
 @Data
-public class Componente {
+public class Component {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     //para que la base de datos asigne el número automáticamente (auto-incremental)
