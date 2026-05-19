@@ -22,5 +22,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>component-service</module>
+        <module>cpu-service</module>
     </modules>
 </project>
