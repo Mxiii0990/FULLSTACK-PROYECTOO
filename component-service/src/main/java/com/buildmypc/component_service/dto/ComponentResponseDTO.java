@@ -8,7 +8,7 @@ public class ComponentResponseDTO {
     private String tipo;
     private String marca;
     private String modelo;
-    private Integer precioBase;
+    private Double precioBase;
     private String estado;
     private String descripcion;
 }

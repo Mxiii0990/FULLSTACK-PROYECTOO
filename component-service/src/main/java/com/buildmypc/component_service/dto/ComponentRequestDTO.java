@@ -18,7 +18,7 @@ public class ComponentRequestDTO {
 
     @NotNull(message = "El precio base es obligatorio")
     @DecimalMin(value = "0.01", message = "El precio debe ser mayor a cero")
-    private Integer precioBase;
+    private Double precioBase;
 
     private String estado;
     private String descripcion;

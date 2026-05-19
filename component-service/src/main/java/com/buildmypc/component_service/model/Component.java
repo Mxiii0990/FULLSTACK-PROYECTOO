@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "componentes")
+@Table(name = "components")
 //esta clase debe convertirse en una tabla llamada componentes en la base de datos Oracle
 @Data
 public class Component {
