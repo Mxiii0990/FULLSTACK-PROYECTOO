@@ -13,11 +13,11 @@ public class Component {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     //para que la base de datos asigne el número automáticamente (auto-incremental)
     private Long id;
-
+    private String nombre;
     private String tipo;
     private String marca;
     private String modelo;
-    private double precioBase;
+    private double precio;
     private String estado;
     private String descripcion;
     private LocalDate fechaLanzamiento;
