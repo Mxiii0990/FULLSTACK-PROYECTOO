@@ -16,14 +16,31 @@ public class RamController {
     @Autowired
     private RamService service;
 
+    @PostMapping
+    public ResponseEntity<RamResponseDTO> crearRam(@Valid @RequestBody RamRequestDTO request) {
+        RamResponseDTO nuevaRam = service.crearRam(request);
+        return new ResponseEntity<>(nuevaRam, HttpStatus.CREATED);
+    }
+
     @GetMapping
     public ResponseEntity<List<RamResponseDTO>> listarRams() {
         return ResponseEntity.ok(service.obtenerTodas());
     }
 
-    @PostMapping
-    public ResponseEntity<RamResponseDTO> crearRam(@Valid @RequestBody RamRequestDTO request) {
-        RamResponseDTO nuevaRam = service.crearRam(request);
-        return new ResponseEntity<>(nuevaRam, HttpStatus.CREATED);
+    @GetMapping("/{id}")
+    public ResponseEntity<RamResponseDTO> obtenerRamPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(service.obtenerPorId(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RamResponseDTO> actualizarRam(@PathVariable Long id, @Valid @RequestBody RamRequestDTO request) {
+        RamResponseDTO ramActualizada = service.actualizarRam(id, request);
+        return ResponseEntity.ok(ramActualizada);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarRam(@PathVariable Long id) {
+        service.eliminarRam(id);
+        return ResponseEntity.noContent().build();
     }
 }
