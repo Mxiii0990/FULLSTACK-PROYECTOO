@@ -28,5 +28,7 @@
         <module>gpu-service</module>
         <module>storage-service</module>
         <module>psu-service</module>
+        <module>builder-service</module>
+
     </modules>
 </project>
