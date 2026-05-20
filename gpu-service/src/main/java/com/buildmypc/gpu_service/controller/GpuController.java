@@ -17,14 +17,31 @@ public class GpuController {
     @Autowired
     private GpuService service;
 
+    @PostMapping
+    public ResponseEntity<GpuResponseDTO> crearGpu(@Valid @RequestBody GpuRequestDTO request) {
+        GpuResponseDTO nueva = service.crearGpu(request);
+        return new ResponseEntity<>(nueva, HttpStatus.CREATED);
+    }
+
     @GetMapping
     public ResponseEntity<List<GpuResponseDTO>> listarGpus() {
         return ResponseEntity.ok(service.obtenerTodas());
     }
 
-    @PostMapping
-    public ResponseEntity<GpuResponseDTO> crearGpu(@Valid @RequestBody GpuRequestDTO request) {
-        GpuResponseDTO nuevaGpu = service.crearGpu(request);
-        return new ResponseEntity<>(nuevaGpu, HttpStatus.CREATED);
+    @GetMapping("/{id}")
+    public ResponseEntity<GpuResponseDTO> obtenerGpuPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(service.obtenerPorId(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<GpuResponseDTO> actualizarGpu(@PathVariable Long id, @Valid @RequestBody GpuRequestDTO request) {
+        GpuResponseDTO actualizada = service.actualizarGpu(id, request);
+        return ResponseEntity.ok(actualizada);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarGpu(@PathVariable Long id) {
+        service.eliminarGpu(id);
+        return ResponseEntity.noContent().build();
     }
 }
