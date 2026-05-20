@@ -27,5 +27,6 @@
         <module>motherboard-service</module>
         <module>gpu-service</module>
         <module>storage-service</module>
+        <module>psu-service</module>
     </modules>
 </project>
