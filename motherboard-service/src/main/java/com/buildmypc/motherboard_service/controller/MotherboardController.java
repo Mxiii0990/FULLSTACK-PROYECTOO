@@ -13,17 +13,35 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/motherboards")
 public class MotherboardController {
+
     @Autowired
     private MotherboardService service;
+
+    @PostMapping
+    public ResponseEntity<MotherboardResponseDTO> crearMotherboard(@Valid @RequestBody MotherboardRequestDTO request) {
+        MotherboardResponseDTO nueva = service.crearMotherboard(request);
+        return new ResponseEntity<>(nueva, HttpStatus.CREATED);
+    }
 
     @GetMapping
     public ResponseEntity<List<MotherboardResponseDTO>> listarMotherboards() {
         return ResponseEntity.ok(service.obtenerTodas());
     }
 
-    @PostMapping
-    public ResponseEntity<MotherboardResponseDTO> crearMotherboard(@Valid @RequestBody MotherboardRequestDTO request) {
-        MotherboardResponseDTO nuevaMotherboard = service.crearMotherboard(request);
-        return new ResponseEntity<>(nuevaMotherboard, HttpStatus.CREATED);
+    @GetMapping("/{id}")
+    public ResponseEntity<MotherboardResponseDTO> obtenerMotherboardPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(service.obtenerPorId(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MotherboardResponseDTO> actualizarMotherboard(@PathVariable Long id, @Valid @RequestBody MotherboardRequestDTO request) {
+        MotherboardResponseDTO actualizada = service.actualizarMotherboard(id, request);
+        return ResponseEntity.ok(actualizada);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarMotherboard(@PathVariable Long id) {
+        service.eliminarMotherboard(id);
+        return ResponseEntity.noContent().build();
     }
 }
