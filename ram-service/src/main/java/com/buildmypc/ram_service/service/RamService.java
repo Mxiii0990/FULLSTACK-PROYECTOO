@@ -15,6 +15,7 @@ public class RamService {
     private RamRepository repository;
 
     public RamResponseDTO crearRam(RamRequestDTO request) {
+
         System.out.println("Ejecutando metodo: Creando nueva RAM");
         Ram ram = new Ram();
         ram.setComponentId(request.getComponentId());
