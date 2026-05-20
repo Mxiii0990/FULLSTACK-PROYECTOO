@@ -14,25 +14,52 @@ public class CpuService {
     @Autowired
     private CpuRepository repository;
 
-    public List<CpuResponseDTO> obtenerTodos() {
-        System.out.println("Ejecutando metodo: Obteniendo todas las CPUs del catalogo");
+    public CpuResponseDTO crearCpu(CpuRequestDTO request) {
+        System.out.println("Ejecutando metodo: Creando nueva CPU");
+        Cpu cpu = new Cpu();
+        cpu.setComponentId(request.getComponentId());
+        cpu.setSocket(request.getSocket());
+        cpu.setCores(request.getCores());
+        cpu.setFrecuenciaBase(request.getFrecuenciaBase());
+
+        Cpu guardado = repository.save(cpu);
+        return mapearAResponseDTO(guardado);
+    }
+
+    public List<CpuResponseDTO> obtenerTodas() {
+        System.out.println("Ejecutando metodo: Listando todas las CPUs");
         return repository.findAll().stream()
                 .map(this::mapearAResponseDTO)
                 .collect(Collectors.toList());
     }
 
-    public CpuResponseDTO crearCpu(CpuRequestDTO request) {
-        System.out.println("Ejecutando metodo: Creando nueva CPU vinculada al Component ID: " + request.getComponentId());
+    public CpuResponseDTO obtenerPorId(Long id) {
+        System.out.println("Ejecutando metodo: Buscando CPU por ID: " + id);
+        Cpu cpu = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("CPU no encontrada con ID: " + id));
+        return mapearAResponseDTO(cpu);
+    }
 
-        Cpu cpu = new Cpu();
-        cpu.setComponentId(request.getComponentId());
-        cpu.setSocket(request.getSocket());
-        cpu.setCores(request.getCores());
-        cpu.setThreads(request.getThreads());
-        cpu.setTdp(request.getTdp());
+    public CpuResponseDTO actualizarCpu(Long id, CpuRequestDTO request) {
+        System.out.println("Ejecutando metodo: Actualizando CPU con ID: " + id);
+        Cpu existente = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("CPU no encontrada con ID: " + id));
 
-        Cpu guardado = repository.save(cpu);
-        return mapearAResponseDTO(guardado);
+        existente.setComponentId(request.getComponentId());
+        existente.setSocket(request.getSocket());
+        existente.setCores(request.getCores());
+        existente.setFrecuenciaBase(request.getFrecuenciaBase());
+
+        Cpu actualizado = repository.save(existente);
+        return mapearAResponseDTO(actualizado);
+    }
+
+    public void eliminarCpu(Long id) {
+        System.out.println("Ejecutando metodo: Eliminando CPU con ID: " + id);
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("CPU no encontrada con ID: " + id);
+        }
+        repository.deleteById(id);
     }
 
     private CpuResponseDTO mapearAResponseDTO(Cpu cpu) {
@@ -41,8 +68,7 @@ public class CpuService {
         dto.setComponentId(cpu.getComponentId());
         dto.setSocket(cpu.getSocket());
         dto.setCores(cpu.getCores());
-        dto.setThreads(cpu.getThreads());
-        dto.setTdp(cpu.getTdp());
+        dto.setFrecuenciaBase(cpu.getFrecuenciaBase());
         return dto;
     }
 }
