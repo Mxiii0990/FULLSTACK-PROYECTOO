@@ -9,4 +9,5 @@ public class CpuResponseDTO {
     private Integer cores;
     private Integer threads;
     private Integer tdp;
+    private Double frecuenciaBase;
 }

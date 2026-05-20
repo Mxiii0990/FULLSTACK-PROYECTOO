@@ -22,4 +22,7 @@ public class CpuRequestDTO {
 
     @NotNull(message = "El TDP es obligatorio")
     private Integer tdp;
+
+    @NotNull(message = "La frecuencia base es obligatoria")
+    private Double frecuenciaBase;
 }

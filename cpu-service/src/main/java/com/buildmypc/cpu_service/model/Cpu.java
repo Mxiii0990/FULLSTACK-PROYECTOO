@@ -17,4 +17,5 @@ public class Cpu {
     private Integer cores;
     private Integer threads;
     private Integer tdp; // Consumo en Watts
+    private Double frecuenciaBase;
 }
