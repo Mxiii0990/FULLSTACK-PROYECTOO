@@ -3,6 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/component-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/cpu-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/motherboard-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ram-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ram.service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
