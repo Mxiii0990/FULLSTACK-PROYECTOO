@@ -1,4 +1,4 @@
-package com.buildmypc.ram.service.dto;
+package com.buildmypc.ram_service.dto;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 

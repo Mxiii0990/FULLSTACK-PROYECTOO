@@ -23,6 +23,6 @@
     <modules>
         <module>component-service</module>
         <module>cpu-service</module>
-        <module>ram.service</module>
+        <module>ram-service</module>
     </modules>
 </project>
