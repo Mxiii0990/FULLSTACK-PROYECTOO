@@ -29,6 +29,8 @@
         <module>storage-service</module>
         <module>psu-service</module>
         <module>builder-service</module>
+        <module>user-service</module>
+
 
     </modules>
 </project>
