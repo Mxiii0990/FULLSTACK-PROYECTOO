@@ -26,5 +26,6 @@
         <module>ram-service</module>
         <module>motherboard-service</module>
         <module>gpu-service</module>
+        <module>storage-service</module>
     </modules>
 </project>
