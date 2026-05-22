@@ -1,4 +1,6 @@
 package com.buildmypc.gpu_service.service;
+
+import com.buildmypc.gpu_service.client.ComponentClient; // <-- Importante: Importamos el cliente
 import com.buildmypc.gpu_service.dto.GpuRequestDTO;
 import com.buildmypc.gpu_service.dto.GpuResponseDTO;
 import com.buildmypc.gpu_service.model.Gpu;
@@ -15,8 +17,17 @@ public class GpuService {
     @Autowired
     private GpuRepository repository;
 
+    @Autowired
+    private ComponentClient componentClient;
+
     public GpuResponseDTO crearGpu(GpuRequestDTO request) {
         System.out.println("Ejecutando metodo: Creando nueva Tarjeta Grafica (GPU)");
+
+        // --- VALIDACION OPENFEIGN ---
+        // Pregunta al puerto 8081 si existe el componente base. Si no, explota y no guarda.
+        System.out.println("Validando existencia del componente general ID: " + request.getComponentId());
+        componentClient.obtenerComponentePorId(request.getComponentId());
+
         Gpu gpu = new Gpu();
         gpu.setComponentId(request.getComponentId());
         gpu.setVram(request.getVram());
@@ -45,6 +56,10 @@ public class GpuService {
         System.out.println("Ejecutando metodo: Actualizando GPU con ID: " + id);
         Gpu existente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("GPU no encontrada con ID: " + id));
+
+        // --- VALIDACION OPENFEIGN ---
+        System.out.println("Validando existencia del componente general ID: " + request.getComponentId());
+        componentClient.obtenerComponentePorId(request.getComponentId());
 
         existente.setComponentId(request.getComponentId());
         existente.setVram(request.getVram());
