@@ -1,4 +1,6 @@
 package com.buildmypc.storage_service.service;
+
+import com.buildmypc.storage_service.client.ComponentClient; // <-- Importante: Importamos el cliente
 import com.buildmypc.storage_service.dto.StorageRequestDTO;
 import com.buildmypc.storage_service.dto.StorageResponseDTO;
 import com.buildmypc.storage_service.model.Storage;
@@ -15,8 +17,17 @@ public class StorageService {
     @Autowired
     private StorageRepository repository;
 
+    @Autowired
+    private ComponentClient componentClient; // <-- Inyectamos la conexión al catálogo
+
     public StorageResponseDTO crearStorage(StorageRequestDTO request) {
         System.out.println("Ejecutando metodo: Creando nueva unidad de Almacenamiento");
+
+        // --- VALIDACION OPENFEIGN ---
+        // Pregunta al puerto 8081 si existe el componente base. Si no, lanza error y no guarda.
+        System.out.println("Validando existencia del componente general ID: " + request.getComponentId());
+        componentClient.obtenerComponentePorId(request.getComponentId());
+
         Storage storage = new Storage();
         storage.setComponentId(request.getComponentId());
         storage.setTipo(request.getTipo());
@@ -45,6 +56,10 @@ public class StorageService {
         System.out.println("Ejecutando metodo: Actualizando almacenamiento con ID: " + id);
         Storage existente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Unidad de almacenamiento no encontrada con ID: " + id));
+
+        // --- VALIDACION OPENFEIGN ---
+        System.out.println("Validando existencia del componente general ID: " + request.getComponentId());
+        componentClient.obtenerComponentePorId(request.getComponentId());
 
         existente.setComponentId(request.getComponentId());
         existente.setTipo(request.getTipo());
