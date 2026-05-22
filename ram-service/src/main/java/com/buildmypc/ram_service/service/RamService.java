@@ -1,4 +1,6 @@
 package com.buildmypc.ram_service.service;
+
+import com.buildmypc.ram_service.client.ComponentClient; // <-- Importante: Importamos el cliente
 import com.buildmypc.ram_service.dto.RamRequestDTO;
 import com.buildmypc.ram_service.dto.RamResponseDTO;
 import com.buildmypc.ram_service.model.Ram;
@@ -11,12 +13,21 @@ import java.util.stream.Collectors;
 
 @Service
 public class RamService {
+
     @Autowired
     private RamRepository repository;
 
-    public RamResponseDTO crearRam(RamRequestDTO request) {
+    @Autowired
+    private ComponentClient componentClient; // <-- Inyectamos la conexion al catalogo
 
+    public RamResponseDTO crearRam(RamRequestDTO request) {
         System.out.println("Ejecutando metodo: Creando nueva RAM");
+
+        // --- VALIDACION OPENFEIGN ---
+        // Pregunta al puerto 8081 si existe el componente base. Si no, explota y no guarda.
+        System.out.println("Validando existencia del componente general ID: " + request.getComponentId());
+        componentClient.obtenerComponentePorId(request.getComponentId());
+
         Ram ram = new Ram();
         ram.setComponentId(request.getComponentId());
         ram.setTipo(request.getTipo());
@@ -45,6 +56,10 @@ public class RamService {
         System.out.println("Ejecutando metodo: Actualizando RAM con ID: " + id);
         Ram existente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("RAM no encontrada con ID: " + id));
+
+        // --- VALIDACION OPENFEIGN ---
+        System.out.println("Validando existencia del componente general ID: " + request.getComponentId());
+        componentClient.obtenerComponentePorId(request.getComponentId());
 
         existente.setComponentId(request.getComponentId());
         existente.setTipo(request.getTipo());
