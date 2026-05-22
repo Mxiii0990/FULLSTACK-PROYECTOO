@@ -1,5 +1,6 @@
 package com.buildmypc.compatibility_service.service;
 
+import com.buildmypc.compatibility_service.client.BuildClient; // <-- Importamos el cliente
 import com.buildmypc.compatibility_service.dto.ValidacionRequestDTO;
 import com.buildmypc.compatibility_service.dto.ValidacionResponseDTO;
 import com.buildmypc.compatibility_service.model.ValidacionCompatibilidad;
@@ -16,8 +17,17 @@ public class ValidacionService {
     @Autowired
     private ValidacionRepository repository;
 
+    @Autowired
+    private BuildClient buildClient; // <-- Inyectamos la conexión al ensamblador
+
     public ValidacionResponseDTO crearValidacion(ValidacionRequestDTO request) {
         System.out.println("Ejecutando metodo: Guardando resultado de compatibilidad");
+
+        // --- VALIDACION OPENFEIGN ---
+        // Pregunta al builder-service si el PC armado existe. Si no, explota y no guarda.
+        System.out.println("Validando existencia del ensamble ID: " + request.getBuildId());
+        buildClient.obtenerEnsamblePorId(request.getBuildId());
+
         ValidacionCompatibilidad validacion = new ValidacionCompatibilidad();
         validacion.setBuildId(request.getBuildId());
         validacion.setCompatible(request.getCompatible());
@@ -48,6 +58,10 @@ public class ValidacionService {
         System.out.println("Ejecutando metodo: Actualizando validacion con ID: " + id);
         ValidacionCompatibilidad existente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Validacion no encontrada con ID: " + id));
+
+        // --- VALIDACION OPENFEIGN ---
+        System.out.println("Validando existencia del ensamble ID: " + request.getBuildId());
+        buildClient.obtenerEnsamblePorId(request.getBuildId());
 
         existente.setBuildId(request.getBuildId());
         existente.setCompatible(request.getCompatible());
