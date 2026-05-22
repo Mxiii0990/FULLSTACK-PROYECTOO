@@ -1,4 +1,6 @@
 package com.buildmypc.psu_service.service;
+
+import com.buildmypc.psu_service.client.ComponentClient; // <-- Importante: Importamos el cliente
 import com.buildmypc.psu_service.dto.PsuRequestDTO;
 import com.buildmypc.psu_service.dto.PsuResponseDTO;
 import com.buildmypc.psu_service.model.Psu;
@@ -15,8 +17,17 @@ public class PsuService {
     @Autowired
     private PsuRepository repository;
 
+    @Autowired
+    private ComponentClient componentClient; // <-- Inyectamos la conexión al catálogo
+
     public PsuResponseDTO crearPsu(PsuRequestDTO request) {
         System.out.println("Ejecutando metodo: Creando nueva Fuente de Poder");
+
+        // --- VALIDACION OPENFEIGN ---
+        // Pregunta al puerto 8081 si existe el componente base. Si no, lanza error y no guarda.
+        System.out.println("Validando existencia del componente general ID: " + request.getComponentId());
+        componentClient.obtenerComponentePorId(request.getComponentId());
+
         Psu psu = new Psu();
         psu.setComponentId(request.getComponentId());
         psu.setWatts(request.getWatts());
@@ -45,6 +56,10 @@ public class PsuService {
         System.out.println("Ejecutando metodo: Actualizando Fuente de Poder con ID: " + id);
         Psu existente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Fuente de Poder no encontrada con ID: " + id));
+
+        // --- VALIDACION OPENFEIGN ---
+        System.out.println("Validando existencia del componente general ID: " + request.getComponentId());
+        componentClient.obtenerComponentePorId(request.getComponentId());
 
         existente.setComponentId(request.getComponentId());
         existente.setWatts(request.getWatts());
