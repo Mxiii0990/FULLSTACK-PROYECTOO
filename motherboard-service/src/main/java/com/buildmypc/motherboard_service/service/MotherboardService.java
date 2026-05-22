@@ -1,4 +1,6 @@
 package com.buildmypc.motherboard_service.service;
+
+import com.buildmypc.motherboard_service.client.ComponentClient; // <-- Importante: Importamos el cliente
 import com.buildmypc.motherboard_service.dto.MotherboardRequestDTO;
 import com.buildmypc.motherboard_service.dto.MotherboardResponseDTO;
 import com.buildmypc.motherboard_service.model.Motherboard;
@@ -15,8 +17,17 @@ public class MotherboardService {
     @Autowired
     private MotherboardRepository repository;
 
+    @Autowired
+    private ComponentClient componentClient; // <-- Inyectamos la conexion al catalogo
+
     public MotherboardResponseDTO crearMotherboard(MotherboardRequestDTO request) {
         System.out.println("Ejecutando metodo: Creando nueva Placa Madre");
+
+        // --- VALIDACION OPENFEIGN ---
+        // Aseguramos que la placa madre exista en el catalogo base del puerto 8081
+        System.out.println("Validando existencia del componente general ID: " + request.getComponentId());
+        componentClient.obtenerComponentePorId(request.getComponentId());
+
         Motherboard motherboard = new Motherboard();
         motherboard.setComponentId(request.getComponentId());
         motherboard.setSocket(request.getSocket());
@@ -45,6 +56,10 @@ public class MotherboardService {
         System.out.println("Ejecutando metodo: Actualizando Placa Madre con ID: " + id);
         Motherboard existente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Placa Madre no encontrada con ID: " + id));
+
+        // --- VALIDACION OPENFEIGN ---
+        System.out.println("Validando existencia del componente general ID: " + request.getComponentId());
+        componentClient.obtenerComponentePorId(request.getComponentId());
 
         existente.setComponentId(request.getComponentId());
         existente.setSocket(request.getSocket());
