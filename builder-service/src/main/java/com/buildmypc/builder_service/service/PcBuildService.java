@@ -1,4 +1,6 @@
 package com.buildmypc.builder_service.service;
+
+import com.buildmypc.builder_service.client.*; // Importamos todos los clientes
 import com.buildmypc.builder_service.dto.PcBuildRequestDTO;
 import com.buildmypc.builder_service.dto.PcBuildResponseDTO;
 import com.buildmypc.builder_service.model.PcBuild;
@@ -15,8 +17,26 @@ public class PcBuildService {
     @Autowired
     private PcBuildRepository repository;
 
+    // --- INYECCIÓN DE LOS CLIENTES FEIGN ---
+    @Autowired private CpuClient cpuClient;
+    @Autowired private MotherboardClient motherboardClient;
+    @Autowired private RamClient ramClient;
+    @Autowired private GpuClient gpuClient;
+    @Autowired private StorageClient storageClient;
+    @Autowired private PsuClient psuClient;
+
     public PcBuildResponseDTO crearEnsamble(PcBuildRequestDTO request) {
         System.out.println("Ejecutando metodo: Guardando un nuevo PC armado");
+
+        // --- VALIDACIONES MULTIPLES CON OPENFEIGN ---
+        System.out.println("Validando que todas las piezas existan en sus respectivos microservicios...");
+        if (request.getCpuId() != null) cpuClient.obtenerCpuPorId(request.getCpuId());
+        if (request.getMotherboardId() != null) motherboardClient.obtenerMotherboardPorId(request.getMotherboardId());
+        if (request.getRamId() != null) ramClient.obtenerRamPorId(request.getRamId());
+        if (request.getGpuId() != null) gpuClient.obtenerGpuPorId(request.getGpuId()); // Soporta PCs sin gráfica dedicada
+        if (request.getStorageId() != null) storageClient.obtenerStoragePorId(request.getStorageId());
+        if (request.getPsuId() != null) psuClient.obtenerPsuPorId(request.getPsuId());
+
         PcBuild build = new PcBuild();
         build.setNombreEnsamble(request.getNombreEnsamble());
         build.setCpuId(request.getCpuId());
@@ -48,6 +68,15 @@ public class PcBuildService {
         System.out.println("Ejecutando metodo: Actualizando un PC armado con ID: " + id);
         PcBuild existente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ensamble no encontrado con ID: " + id));
+
+        // --- VALIDACIONES AL ACTUALIZAR ---
+        System.out.println("Validando existencia de las nuevas piezas...");
+        if (request.getCpuId() != null) cpuClient.obtenerCpuPorId(request.getCpuId());
+        if (request.getMotherboardId() != null) motherboardClient.obtenerMotherboardPorId(request.getMotherboardId());
+        if (request.getRamId() != null) ramClient.obtenerRamPorId(request.getRamId());
+        if (request.getGpuId() != null) gpuClient.obtenerGpuPorId(request.getGpuId());
+        if (request.getStorageId() != null) storageClient.obtenerStoragePorId(request.getStorageId());
+        if (request.getPsuId() != null) psuClient.obtenerPsuPorId(request.getPsuId());
 
         existente.setNombreEnsamble(request.getNombreEnsamble());
         existente.setCpuId(request.getCpuId());
