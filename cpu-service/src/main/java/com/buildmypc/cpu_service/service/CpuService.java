@@ -1,4 +1,6 @@
 package com.buildmypc.cpu_service.service;
+
+import com.buildmypc.cpu_service.client.ComponentClient; // <-- Importante: Importamos el cliente
 import com.buildmypc.cpu_service.dto.CpuRequestDTO;
 import com.buildmypc.cpu_service.dto.CpuResponseDTO;
 import com.buildmypc.cpu_service.model.Cpu;
@@ -11,11 +13,21 @@ import java.util.stream.Collectors;
 
 @Service
 public class CpuService {
+
     @Autowired
     private CpuRepository repository;
 
+    @Autowired
+    private ComponentClient componentClient; // <-- Inyectamos la conexión al catálogo
+
     public CpuResponseDTO crearCpu(CpuRequestDTO request) {
         System.out.println("Ejecutando metodo: Creando nueva CPU");
+
+        // --- VALIDACION OPENFEIGN ---
+        // Pregunta al puerto 8081 si existe el componente base. Si no, explota y no guarda.
+        System.out.println("Validando existencia del componente general ID: " + request.getComponentId());
+        componentClient.obtenerComponentePorId(request.getComponentId());
+
         Cpu cpu = new Cpu();
         cpu.setComponentId(request.getComponentId());
         cpu.setSocket(request.getSocket());
@@ -44,6 +56,11 @@ public class CpuService {
         System.out.println("Ejecutando metodo: Actualizando CPU con ID: " + id);
         Cpu existente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("CPU no encontrada con ID: " + id));
+
+        // --- VALIDACION OPENFEIGN ---
+        // También validamos al actualizar, por si el usuario cambia el ID del componente
+        System.out.println("Validando existencia del componente general ID: " + request.getComponentId());
+        componentClient.obtenerComponentePorId(request.getComponentId());
 
         existente.setComponentId(request.getComponentId());
         existente.setSocket(request.getSocket());
