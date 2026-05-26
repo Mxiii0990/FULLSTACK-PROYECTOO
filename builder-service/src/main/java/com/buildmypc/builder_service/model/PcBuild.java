@@ -11,9 +11,7 @@ public class PcBuild {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nombreEnsamble; // Ej: "Mi PC Gamer V1"
-
-    // Aquí guardamos los IDs de los componentes elegidos
+    private String nombreEnsamble;
     private Long cpuId;
     private Long motherboardId;
     private Long ramId;

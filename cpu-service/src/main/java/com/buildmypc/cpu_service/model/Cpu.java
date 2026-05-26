@@ -11,11 +11,10 @@ public class Cpu {
     private Long id;
 
     @Column(nullable = false)
-    private Long componentId; // Conecta con el ID del component-service
-
+    private Long componentId;
     private String socket;
     private Integer cores;
     private Integer threads;
-    private Integer tdp; // Consumo en Watts
+    private Integer tdp;
     private Double frecuenciaBase;
 }

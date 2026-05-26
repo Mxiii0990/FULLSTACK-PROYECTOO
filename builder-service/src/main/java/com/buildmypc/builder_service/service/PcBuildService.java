@@ -17,7 +17,7 @@ public class PcBuildService {
     @Autowired
     private PcBuildRepository repository;
 
-    // --- INYECCIÓN DE LOS CLIENTES FEIGN ---
+    // --- inyeccion de los clientes feing ---
     @Autowired private CpuClient cpuClient;
     @Autowired private MotherboardClient motherboardClient;
     @Autowired private RamClient ramClient;
@@ -28,7 +28,7 @@ public class PcBuildService {
     public PcBuildResponseDTO crearEnsamble(PcBuildRequestDTO request) {
         System.out.println("Ejecutando metodo: Guardando un nuevo PC armado");
 
-        // --- VALIDACIONES MULTIPLES CON OPENFEIGN ---
+        // --- validaciones con openfeing ---
         System.out.println("Validando que todas las piezas existan en sus respectivos microservicios...");
         if (request.getCpuId() != null) cpuClient.obtenerCpuPorId(request.getCpuId());
         if (request.getMotherboardId() != null) motherboardClient.obtenerMotherboardPorId(request.getMotherboardId());
@@ -69,7 +69,7 @@ public class PcBuildService {
         PcBuild existente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Ensamble no encontrado con ID: " + id));
 
-        // --- VALIDACIONES AL ACTUALIZAR ---
+        // --- validaciones al actualizar ---
         System.out.println("Validando existencia de las nuevas piezas...");
         if (request.getCpuId() != null) cpuClient.obtenerCpuPorId(request.getCpuId());
         if (request.getMotherboardId() != null) motherboardClient.obtenerMotherboardPorId(request.getMotherboardId());

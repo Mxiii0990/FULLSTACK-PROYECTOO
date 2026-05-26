@@ -18,12 +18,12 @@ public class CpuService {
     private CpuRepository repository;
 
     @Autowired
-    private ComponentClient componentClient; // <-- Inyectamos la conexión al catálogo
+    private ComponentClient componentClient;
 
     public CpuResponseDTO crearCpu(CpuRequestDTO request) {
         System.out.println("Ejecutando metodo: Creando nueva CPU");
 
-        // --- VALIDACION OPENFEIGN ---
+        // --- validacion con openfeing ---
         // Pregunta al puerto 8081 si existe el componente base. Si no, explota y no guarda.
         System.out.println("Validando existencia del componente general ID: " + request.getComponentId());
         componentClient.obtenerComponentePorId(request.getComponentId());
@@ -57,7 +57,7 @@ public class CpuService {
         Cpu existente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("CPU no encontrada con ID: " + id));
 
-        // --- VALIDACION OPENFEIGN ---
+        // --- validacion openfeing ---
         // También validamos al actualizar, por si el usuario cambia el ID del componente
         System.out.println("Validando existencia del componente general ID: " + request.getComponentId());
         componentClient.obtenerComponentePorId(request.getComponentId());

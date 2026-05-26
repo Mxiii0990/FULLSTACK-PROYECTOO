@@ -6,13 +6,13 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
-@Data // ¡Esta etiqueta es la que genera el getPrecio() mágicamente!
+@Data
 public class ComponentRequestDTO {
     @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
 
     @NotBlank(message = "El tipo de componente es obligatorio")
-    private String tipo; // Ej: CPU, RAM, GPU
+    private String tipo; // cpu, gpu, ram
 
     @NotBlank(message = "La marca es obligatoria")
     private String marca;
@@ -25,7 +25,7 @@ public class ComponentRequestDTO {
     private double precio;
 
     @NotBlank(message = "El estado es obligatorio")
-    private String estado; // Ej: Nuevo, Usado, Reacondicionado
+    private String estado; // Nuevo, Usado, Reacondicionado
 
     private String descripcion;
 
