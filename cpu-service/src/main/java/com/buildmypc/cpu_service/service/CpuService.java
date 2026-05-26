@@ -1,6 +1,6 @@
 package com.buildmypc.cpu_service.service;
 
-import com.buildmypc.cpu_service.client.ComponentClient; // <-- Importante: Importamos el cliente
+import com.buildmypc.cpu_service.client.ComponentClient;
 import com.buildmypc.cpu_service.dto.CpuRequestDTO;
 import com.buildmypc.cpu_service.dto.CpuResponseDTO;
 import com.buildmypc.cpu_service.model.Cpu;
@@ -33,6 +33,9 @@ public class CpuService {
         cpu.setSocket(request.getSocket());
         cpu.setCores(request.getCores());
         cpu.setFrecuenciaBase(request.getFrecuenciaBase());
+        // Agregados los campos faltantes
+        cpu.setThreads(request.getThreads());
+        cpu.setTdp(request.getTdp());
 
         Cpu guardado = repository.save(cpu);
         return mapearAResponseDTO(guardado);
@@ -66,6 +69,9 @@ public class CpuService {
         existente.setSocket(request.getSocket());
         existente.setCores(request.getCores());
         existente.setFrecuenciaBase(request.getFrecuenciaBase());
+        // Agregados los campos faltantes
+        existente.setThreads(request.getThreads());
+        existente.setTdp(request.getTdp());
 
         Cpu actualizado = repository.save(existente);
         return mapearAResponseDTO(actualizado);
@@ -86,6 +92,9 @@ public class CpuService {
         dto.setSocket(cpu.getSocket());
         dto.setCores(cpu.getCores());
         dto.setFrecuenciaBase(cpu.getFrecuenciaBase());
+        // Agregados los campos faltantes
+        dto.setThreads(cpu.getThreads());
+        dto.setTdp(cpu.getTdp());
         return dto;
     }
 }
