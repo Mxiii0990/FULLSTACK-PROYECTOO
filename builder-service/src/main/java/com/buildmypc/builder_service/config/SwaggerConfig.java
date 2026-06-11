@@ -11,7 +11,7 @@ public class  SwaggerConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("API Builder")
+                        .title("Microservicio-Builder")
                         .version("1.0")
                         .description("Documentationde la API de Builder"));
     }

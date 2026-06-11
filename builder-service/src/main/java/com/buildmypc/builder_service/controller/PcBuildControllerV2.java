@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/builds")
-@Tag(name="Builder V1", description = "Metodos CRUD para el Builder. Gestiona la validación y el armado final de los equipos.")
+@RequestMapping("/api/V2/builds")
+@Tag(name="Builder V2", description = "Metodos CRUD para el Builder. Gestiona la validación y el armado final de los equipos.")
 public class PcBuildControllerV2 {
 
     @Autowired
