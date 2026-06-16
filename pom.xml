@@ -31,6 +31,9 @@
         <module>builder-service</module>
         <module>user-service</module>
         <module>compatibility-service</module>
+        <module>msvc-eureka</module>
+        <module>msvc-gateway</module>
+
 
 
 

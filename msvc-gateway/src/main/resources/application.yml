@@ -1,0 +1,150 @@
+spring:
+  application:
+    name: msvc-gateway
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          # Cada ruta evalúa si la URL entra por el patrón 'predicates' y la reenvía
+          # a 'uri'. lb:// significa "busca este nombre en Eureka y balancea la carga".
+          routes:
+            # --- RUTAS DE TUS MICROSERVICIOS ---
+            - id: builder-service
+              uri: lb://builder-service
+              predicates:
+                - Path=/api/builds/**,/api/v2/builds/**
+            - id: cpu-service
+              uri: lb://cpu-service
+              predicates:
+                - Path=/api/cpus/**
+            - id: gpu-service
+              uri: lb://gpu-service
+              predicates:
+                - Path=/api/gpus/**
+            - id: motherboard-service
+              uri: lb://motherboard-service
+              predicates:
+                - Path=/api/motherboards/**
+            - id: ram-service
+              uri: lb://ram-service
+              predicates:
+                - Path=/api/rams/**
+            - id: storage-service
+              uri: lb://storage-service
+              predicates:
+                - Path=/api/storages/**
+            - id: psu-service
+              uri: lb://psu-service
+              predicates:
+                - Path=/api/psus/**
+            - id: user-service
+              uri: lb://user-service
+              predicates:
+                - Path=/api/users/**
+            - id: compatibility-service
+              uri: lb://compatibility-service
+              predicates:
+                - Path=/api/compatibilities/**
+            - id: component-service
+              uri: lb://component-service
+              predicates:
+                - Path=/api/components/**
+
+            # --- RUTAS PARA EL SWAGGER (OPENAPI) DE CADA SERVICIO ---
+            - id: builder-api-docs
+              uri: lb://builder-service
+              predicates:
+                - Path=/api-docs/builder
+              filters:
+                - RewritePath=/api-docs/builder, /v3/api-docs
+            - id: cpu-api-docs
+              uri: lb://cpu-service
+              predicates:
+                - Path=/api-docs/cpu
+              filters:
+                - RewritePath=/api-docs/cpu, /v3/api-docs
+            - id: gpu-api-docs
+              uri: lb://gpu-service
+              predicates:
+                - Path=/api-docs/gpu
+              filters:
+                - RewritePath=/api-docs/gpu, /v3/api-docs
+            - id: motherboard-api-docs
+              uri: lb://motherboard-service
+              predicates:
+                - Path=/api-docs/motherboard
+              filters:
+                - RewritePath=/api-docs/motherboard, /v3/api-docs
+            - id: ram-api-docs
+              uri: lb://ram-service
+              predicates:
+                - Path=/api-docs/ram
+              filters:
+                - RewritePath=/api-docs/ram, /v3/api-docs
+            - id: storage-api-docs
+              uri: lb://storage-service
+              predicates:
+                - Path=/api-docs/storage
+              filters:
+                - RewritePath=/api-docs/storage, /v3/api-docs
+            - id: psu-api-docs
+              uri: lb://psu-service
+              predicates:
+                - Path=/api-docs/psu
+              filters:
+                - RewritePath=/api-docs/psu, /v3/api-docs
+            - id: user-api-docs
+              uri: lb://user-service
+              predicates:
+                - Path=/api-docs/user
+              filters:
+                - RewritePath=/api-docs/user, /v3/api-docs
+            - id: compatibility-api-docs
+              uri: lb://compatibility-service
+              predicates:
+                - Path=/api-docs/compatibility
+              filters:
+                - RewritePath=/api-docs/compatibility, /v3/api-docs
+            - id: component-api-docs
+              uri: lb://component-service
+              predicates:
+                - Path=/api-docs/component
+              filters:
+                - RewritePath=/api-docs/component, /v3/api-docs
+
+# Punto de entrada único: todo el tráfico de Postman o del Front-end entra por el 8080.
+server:
+  port: 8080
+
+# El gateway también es cliente Eureka para poder resolver los lb://
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+# Swagger UI agregado: una sola página web para ver todos tus microservicios a la vez.
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /docs/swagger-ui.html
+    urls:
+      - name: builder
+        url: /api-docs/builder
+      - name: cpu
+        url: /api-docs/cpu
+      - name: gpu
+        url: /api-docs/gpu
+      - name: motherboard
+        url: /api-docs/motherboard
+      - name: ram
+        url: /api-docs/ram
+      - name: storage
+        url: /api-docs/storage
+      - name: psu
+        url: /api-docs/psu
+      - name: user
+        url: /api-docs/user
+      - name: compatibility
+        url: /api-docs/compatibility
+      - name: component
+        url: /api-docs/component
