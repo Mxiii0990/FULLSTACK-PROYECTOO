@@ -3,54 +3,65 @@ spring:
     name: msvc-gateway
   cloud:
     gateway:
+      # --- NUEVO: CONFIGURACIÓN CORS (Para tu Frontend) ---
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*" # En producción se cambia por tu URL de frontend
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+      # ----------------------------------------------------
       server:
         webmvc:
-          # Cada ruta evalúa si la URL entra por el patrón 'predicates' y la reenvía
-          # a 'uri'. lb:// significa "busca este nombre en Eureka y balancea la carga".
           routes:
-            # --- RUTAS DE TUS MICROSERVICIOS ---
+            # --- RUTAS DE TUS MICROSERVICIOS ACTUALIZADAS A V1/V2 ---
             - id: builder-service
               uri: lb://builder-service
               predicates:
-                - Path=/api/builds/**,/api/v2/builds/**
+                - Path=/api/v1/builds/**,/api/v2/builds/**
             - id: cpu-service
               uri: lb://cpu-service
               predicates:
-                - Path=/api/cpus/**
+                - Path=/api/v1/cpus/**,/api/v2/cpus/**
             - id: gpu-service
               uri: lb://gpu-service
               predicates:
-                - Path=/api/gpus/**
+                - Path=/api/v1/gpus/**,/api/v2/gpus/**
             - id: motherboard-service
               uri: lb://motherboard-service
               predicates:
-                - Path=/api/motherboards/**
+                - Path=/api/v1/motherboards/**,/api/v2/motherboards/**
             - id: ram-service
               uri: lb://ram-service
               predicates:
-                - Path=/api/rams/**
+                - Path=/api/v1/rams/**,/api/v2/rams/**
             - id: storage-service
               uri: lb://storage-service
               predicates:
-                - Path=/api/storages/**
+                - Path=/api/v1/storages/**,/api/v2/storages/**
             - id: psu-service
               uri: lb://psu-service
               predicates:
-                - Path=/api/psus/**
+                - Path=/api/v1/psus/**,/api/v2/psus/**
             - id: user-service
               uri: lb://user-service
               predicates:
-                - Path=/api/users/**
+                - Path=/api/v1/users/**,/api/v2/users/**
             - id: compatibility-service
               uri: lb://compatibility-service
               predicates:
-                - Path=/api/compatibilities/**
+                - Path=/api/v1/validations/**,/api/v2/validations/**
             - id: component-service
               uri: lb://component-service
               predicates:
-                - Path=/api/components/**
+                - Path=/api/v1/components/**,/api/v2/components/**
 
-            # --- RUTAS PARA EL SWAGGER (OPENAPI) DE CADA SERVICIO ---
+            # --- RUTAS PARA EL SWAGGER (OPENAPI) ---
             - id: builder-api-docs
               uri: lb://builder-service
               predicates:
