@@ -3,23 +3,12 @@ spring:
     name: msvc-gateway
   cloud:
     gateway:
-      # --- NUEVO: CONFIGURACIÓN CORS (Para tu Frontend) ---
-      globalcors:
-        cors-configurations:
-          '[/**]':
-            allowedOrigins: "*" # En producción se cambia por tu URL de frontend
-            allowedMethods:
-              - GET
-              - POST
-              - PUT
-              - DELETE
-              - OPTIONS
-            allowedHeaders: "*"
-      # ----------------------------------------------------
       server:
         webmvc:
+          # Cada ruta: si la URL entra por el patron 'predicates', el gateway la reenvia
+          # a 'uri'. lb:// significa "busca este nombre en Eureka y balancea la carga".
           routes:
-            # --- RUTAS DE TUS MICROSERVICIOS ACTUALIZADAS A V1/V2 ---
+            # --- TUS MICROSERVICIOS DE NEGOCIO ---
             - id: builder-service
               uri: lb://builder-service
               predicates:
@@ -51,7 +40,8 @@ spring:
             - id: user-service
               uri: lb://user-service
               predicates:
-                - Path=/api/v1/users/**,/api/v2/users/**
+                # Incluimos /api/auth/** para que pase el endpoint de Login
+                - Path=/api/auth/**,/api/v1/users/**,/api/v2/users/**
             - id: compatibility-service
               uri: lb://compatibility-service
               predicates:
@@ -61,7 +51,9 @@ spring:
               predicates:
                 - Path=/api/v1/components/**,/api/v2/components/**
 
-            # --- RUTAS PARA EL SWAGGER (OPENAPI) ---
+            # Rutas para el OpenAPI (JSON) de cada microservicio. El Swagger UI del gateway
+            # las consume. Usan el prefijo /api-docs/<svc> (NO /v3/api-docs) para no chocar con
+            # el /v3/api-docs propio del gateway. RewritePath lo traduce al /v3/api-docs real del servicio.
             - id: builder-api-docs
               uri: lb://builder-service
               predicates:
@@ -123,21 +115,22 @@ spring:
               filters:
                 - RewritePath=/api-docs/component, /v3/api-docs
 
-# Punto de entrada único: todo el tráfico de Postman o del Front-end entra por el 8080.
+# Punto de entrada unico: todo el trafico entra por aqui.
 server:
   port: 8080
 
-# El gateway también es cliente Eureka para poder resolver los lb://
+# El gateway tambien es cliente Eureka para poder resolver los lb://
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
 
-# Swagger UI agregado: una sola página web para ver todos tus microservicios a la vez.
+# Swagger UI agregado: una sola pagina con un desplegable para elegir el microservicio.
 springdoc:
   swagger-ui:
     enabled: true
     path: /docs/swagger-ui.html
+    # El desplegable apunta a los docs de cada servicio (ruteados por el gateway via lb://).
     urls:
       - name: builder
         url: /api-docs/builder
@@ -159,3 +152,7 @@ springdoc:
         url: /api-docs/compatibility
       - name: component
         url: /api-docs/component
+
+# CLAVE SECRETA JWT: la MISMA que en el user-service y en el resto de microservicios.
+jwt:
+  secret: clave-secreta-super-segura-para-jwt-buildmypc-duoc-2026-0616
