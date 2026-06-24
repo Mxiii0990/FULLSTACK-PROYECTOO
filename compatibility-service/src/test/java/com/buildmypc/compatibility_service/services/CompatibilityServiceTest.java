@@ -117,8 +117,12 @@ public class CompatibilityServiceTest {
         // Simulamos que al guardar en el repo, nos retorna nuestra entidad con ID
         when(repository.save(any(ValidacionCompatibilidad.class))).thenReturn(validacionPrueba);
 
-        // Simulamos que OpenFeign NO tira error al buscar el ensamble
-        doNothing().when(buildClient).obtenerEnsamblePorId(anyLong());
+        // === EL ARREGLO ESTÁ AQUÍ ===
+        // En lugar de doNothing(), hacemos que retorne un objeto simulado.
+        // IMPORTANTE: Si tu cliente Feign devuelve otra clase (ej. BuildResponse), cámbiala aquí.
+        Object ensambleSimulado = new Object();
+        when(buildClient.obtenerEnsamblePorId(anyLong())).thenReturn(ensambleSimulado);
+        // ============================
 
         // Pasamos el RequestDTO como lo pide el Service
         ValidacionResponseDTO resultado = service.crearValidacion(requestPrueba);
