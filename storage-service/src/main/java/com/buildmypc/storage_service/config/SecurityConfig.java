@@ -45,8 +45,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/docs/**", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/storages/**", "/api/v2/storages/**")
-                        .hasAnyRole("ADMIN", "TECNICO", "CLIENTE")
+                        // 👈 Permitir consultas GET públicas para almacenamiento
+                        .requestMatchers(HttpMethod.GET, "/api/v1/storages/**", "/api/v2/storages/**").permitAll()
                         .requestMatchers("/api/v1/storages/**", "/api/v2/storages/**")
                         .hasAnyRole("ADMIN", "TECNICO")
                         .anyRequest().authenticated())

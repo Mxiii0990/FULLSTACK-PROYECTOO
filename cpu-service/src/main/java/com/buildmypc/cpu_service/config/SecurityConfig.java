@@ -45,8 +45,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/docs/**", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/cpus/**", "/api/v2/cpus/**")
-                        .hasAnyRole("ADMIN", "TECNICO", "CLIENTE")
+                        // 👈 Permitir consultas GET públicas para que Feign pueda leer los CPUs sin token
+                        .requestMatchers(HttpMethod.GET, "/api/v1/cpus/**", "/api/v2/cpus/**").permitAll()
                         .requestMatchers("/api/v1/cpus/**", "/api/v2/cpus/**")
                         .hasAnyRole("ADMIN", "TECNICO")
                         .anyRequest().authenticated())

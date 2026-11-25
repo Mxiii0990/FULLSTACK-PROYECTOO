@@ -13,8 +13,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.SecretKey;import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 
 @Configuration
@@ -45,14 +44,13 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/docs/**", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll()
-                        // Rutas corregidas a /api/v1/builds/** y habilitadas también para CLIENTE
-                        .requestMatchers(HttpMethod.GET, "/api/v1/builds/**", "/api/v2/builds/**")
-                        .hasAnyRole("ADMIN", "TECNICO", "CLIENTE")
-                        .requestMatchers("/api/v1/builds/**", "/api/v2/builds/**")
-                        .hasAnyRole("ADMIN", "TECNICO", "CLIENTE")
-                        .anyRequest().authenticated())
+                        .requestMatchers(HttpMethod.GET, "/api/v1/builds/**", "/api/v2/builds/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/builds/**", "/api/v2/builds/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/builds/**", "/api/v2/builds/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/builds/**", "/api/v2/builds/**").permitAll()
+                        .requestMatchers("/api/v1/builds/**", "/api/v2/builds/**").permitAll()
+                        .anyRequest().permitAll())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(converter)))
                 .headers(h -> h.frameOptions(f -> f.disable()));
         return http.build();
     }

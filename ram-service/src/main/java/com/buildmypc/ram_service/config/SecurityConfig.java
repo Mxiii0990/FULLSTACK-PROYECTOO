@@ -45,8 +45,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/docs/**", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/rams/**", "/api/v2/rams/**")
-                        .hasAnyRole("ADMIN", "TECNICO", "CLIENTE")
+                        // 👈 Permitir consultas GET públicas para las memorias RAM
+                        .requestMatchers(HttpMethod.GET, "/api/v1/rams/**", "/api/v2/rams/**").permitAll()
                         .requestMatchers("/api/v1/rams/**", "/api/v2/rams/**")
                         .hasAnyRole("ADMIN", "TECNICO")
                         .anyRequest().authenticated())
