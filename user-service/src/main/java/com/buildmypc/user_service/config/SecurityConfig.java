@@ -44,11 +44,20 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        // 1. Rutas públicas de documentación y consola H2
                         .requestMatchers("/docs/**", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll()
+                        // 2. Permitir registro (POST) sin token
+                        .requestMatchers(HttpMethod.POST, "/api/v1/users", "/api/v2/users", "/api/v1/users/", "/api/v2/users/", "/api/auth/**", "/api/v1/auth/**").permitAll()
+                        // 3. NUEVO: Permitir listar usuarios (GET) sin token para que el login pueda buscar el correo
+                        .requestMatchers(HttpMethod.GET, "/api/v1/users", "/api/v1/users/", "/api/v2/users", "/api/v2/users/").permitAll()
+                        // Permitir ver el catálogo de componentes (GET) sin token
+                        .requestMatchers(HttpMethod.GET, "/api/v1/components/**", "/api/v2/components/**").permitAll()
+                        // 4. Consultas GET con ID permitidas para roles autenticados
                         .requestMatchers(HttpMethod.GET, "/api/v1/users/**", "/api/v2/users/**")
                         .hasAnyRole("ADMIN", "TECNICO", "CLIENTE")
+                        // 5. Modificaciones avanzadas solo para ADMIN
                         .requestMatchers("/api/v1/users/**", "/api/v2/users/**")
-                        .hasAnyRole("ADMIN") // Generalmente, solo ADMIN puede crear/editar/borrar usuarios
+                        .hasAnyRole("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(converter)))
