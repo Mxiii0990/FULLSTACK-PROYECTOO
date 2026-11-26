@@ -45,11 +45,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/docs/**", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll()
-                        // 👈 Permitir consultas GET públicas para que Feign pueda leer los CPUs sin token
-                        .requestMatchers(HttpMethod.GET, "/api/v1/cpus/**", "/api/v2/cpus/**").permitAll()
-                        .requestMatchers("/api/v1/cpus/**", "/api/v2/cpus/**")
+                        // Permitimos lectura GET pública y libre para que Feign consulte sin token ni 401
+                        .requestMatchers(HttpMethod.GET, "/api/cpus/**", "/api/v1/cpus/**", "/api/v2/cpus/**").permitAll()
+                        // Mutaciones (POST, PUT, DELETE) para ADMIN o TECNICO
+                        .requestMatchers("/api/cpus/**", "/api/v1/cpus/**", "/api/v2/cpus/**")
                         .hasAnyRole("ADMIN", "TECNICO")
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(converter)))
                 .headers(h -> h.frameOptions(f -> f.disable()));

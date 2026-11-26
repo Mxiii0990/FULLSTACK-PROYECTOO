@@ -45,9 +45,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/docs/**", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll()
-                        // 👈 Permitir consultas GET públicas para las fuentes de poder
-                        .requestMatchers(HttpMethod.GET, "/api/v1/psus/**", "/api/v2/psus/**").permitAll()
-                        .requestMatchers("/api/v1/psus/**", "/api/v2/psus/**")
+                        .requestMatchers(HttpMethod.GET, "/api/psus/**", "/api/v1/psus/**", "/api/v2/psus/**").permitAll()
+                        .requestMatchers("/api/psus/**", "/api/v1/psus/**", "/api/v2/psus/**")
                         .hasAnyRole("ADMIN", "TECNICO")
                         .anyRequest().authenticated())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

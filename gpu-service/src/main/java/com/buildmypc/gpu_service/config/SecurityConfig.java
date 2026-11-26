@@ -45,9 +45,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/docs/**", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll()
-                        // 👈 Permitir consultas GET públicas para que Feign pueda leer las GPUs sin token
-                        .requestMatchers(HttpMethod.GET, "/api/v1/gpus/**", "/api/v2/gpus/**").permitAll()
-                        .requestMatchers("/api/v1/gpus/**", "/api/v2/gpus/**")
+                        .requestMatchers(HttpMethod.GET, "/api/gpus/**", "/api/v1/gpus/**", "/api/v2/gpus/**").permitAll()
+                        .requestMatchers("/api/gpus/**", "/api/v1/gpus/**", "/api/v2/gpus/**")
                         .hasAnyRole("ADMIN", "TECNICO")
                         .anyRequest().authenticated())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

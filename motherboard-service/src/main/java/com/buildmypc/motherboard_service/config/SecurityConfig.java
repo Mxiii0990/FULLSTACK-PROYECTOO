@@ -45,9 +45,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/docs/**", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll()
-                        // 👈 Permitir consultas GET públicas para las placas madre
-                        .requestMatchers(HttpMethod.GET, "/api/v1/motherboards/**", "/api/v2/motherboards/**").permitAll()
-                        .requestMatchers("/api/v1/motherboards/**", "/api/v2/motherboards/**")
+                        .requestMatchers(HttpMethod.GET, "/api/motherboards/**", "/api/v1/motherboards/**", "/api/v2/motherboards/**").permitAll()
+                        .requestMatchers("/api/motherboards/**", "/api/v1/motherboards/**", "/api/v2/motherboards/**")
                         .hasAnyRole("ADMIN", "TECNICO")
                         .anyRequest().authenticated())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

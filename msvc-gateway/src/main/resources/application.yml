@@ -1,146 +1,24 @@
-spring:
-  application:
-    name: msvc-gateway
-  cloud:
-    gateway:
-      server:
-        webmvc:
-          routes:
-            - id: builder-service
-              uri: lb://builder-service
-              predicates:
-                - Path=/api/v1/builds/**,/api/v2/builds/**
-            - id: cpu-service
-              uri: lb://cpu-service
-              predicates:
-                - Path=/api/v1/cpus/**,/api/v2/cpus/**
-            - id: gpu-service
-              uri: lb://gpu-service
-              predicates:
-                - Path=/api/v1/gpus/**,/api/v2/gpus/**
-            - id: motherboard-service
-              uri: lb://motherboard-service
-              predicates:
-                - Path=/api/v1/motherboards/**,/api/v2/motherboards/**
-            - id: ram-service
-              uri: lb://ram-service
-              predicates:
-                - Path=/api/v1/rams/**,/api/v2/rams/**
-            - id: storage-service
-              uri: lb://storage-service
-              predicates:
-                - Path=/api/v1/storages/**,/api/v2/storages/**
-            - id: psu-service
-              uri: lb://psu-service
-              predicates:
-                - Path=/api/v1/psus/**,/api/v2/psus/**
-            - id: user-service
-              uri: lb://user-service
-              predicates:
-                - Path=/api/auth/**,/api/v1/auth/**,/api/v1/users/**,/api/v2/users/**
-            - id: compatibility-service
-              uri: lb://compatibility-service
-              predicates:
-                - Path=/api/v1/validations/**,/api/v2/validations/**
-            - id: component-service
-              uri: lb://component-service
-              predicates:
-                - Path=/api/v1/components/**,/api/v2/components/**
-
-            - id: builder-api-docs
-              uri: lb://builder-service
-              predicates:
-                - Path=/api-docs/builder
-              filters:
-                - RewritePath=/api-docs/builder, /v3/api-docs
-            - id: cpu-api-docs
-              uri: lb://cpu-service
-              predicates:
-                - Path=/api-docs/cpu
-              filters:
-                - RewritePath=/api-docs/cpu, /v3/api-docs
-            - id: gpu-api-docs
-              uri: lb://gpu-service
-              predicates:
-                - Path=/api-docs/gpu
-              filters:
-                - RewritePath=/api-docs/gpu, /v3/api-docs
-            - id: motherboard-api-docs
-              uri: lb://motherboard-service
-              predicates:
-                - Path=/api-docs/motherboard
-              filters:
-                - RewritePath=/api-docs/motherboard, /v3/api-docs
-            - id: ram-api-docs
-              uri: lb://ram-service
-              predicates:
-                - Path=/api-docs/ram
-              filters:
-                - RewritePath=/api-docs/ram, /v3/api-docs
-            - id: storage-api-docs
-              uri: lb://storage-service
-              predicates:
-                - Path=/api-docs/storage
-              filters:
-                - RewritePath=/api-docs/storage, /v3/api-docs
-            - id: psu-api-docs
-              uri: lb://psu-service
-              predicates:
-                - Path=/api-docs/psu
-              filters:
-                - RewritePath=/api-docs/psu, /v3/api-docs
-            - id: user-api-docs
-              uri: lb://user-service
-              predicates:
-                - Path=/api-docs/user
-              filters:
-                - RewritePath=/api-docs/user, /v3/api-docs
-            - id: compatibility-api-docs
-              uri: lb://compatibility-service
-              predicates:
-                - Path=/api-docs/compatibility
-              filters:
-                - RewritePath=/api-docs/compatibility, /v3/api-docs
-            - id: component-api-docs
-              uri: lb://component-service
-              predicates:
-                - Path=/api-docs/component
-              filters:
-                - RewritePath=/api-docs/component, /v3/api-docs
-
-server:
-  port: 8080
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-
-springdoc:
-  swagger-ui:
-    enabled: true
-    path: /docs/swagger-ui.html
-    urls:
-      - name: builder
-        url: /api-docs/builder
-      - name: cpu
-        url: /api-docs/cpu
-      - name: gpu
-        url: /api-docs/gpu
-      - name: motherboard
-        url: /api-docs/motherboard
-      - name: ram
-        url: /api-docs/ram
-      - name: storage
-        url: /api-docs/storage
-      - name: psu
-        url: /api-docs/psu
-      - name: user
-        url: /api-docs/user
-      - name: compatibility
-        url: /api-docs/compatibility
-      - name: component
-        url: /api-docs/component
-
-jwt:
-  secret: dylangoticasJoaquinWatonasMaxiAas2026newINFORMATICgen
+- id: cpu-service
+    uri: lb://cpu-service
+    predicates:
+      - Path=/api/v1/cpus,/api/v1/cpus/**,/api/v2/cpus,/api/v2/cpus/**
+    - id: gpu-service
+      uri: lb://gpu-service
+      predicates:
+        - Path=/api/v1/gpus,/api/v1/gpus/**,/api/v2/gpus,/api/v2/gpus/**
+    - id: motherboard-service
+      uri: lb://motherboard-service
+      predicates:
+        - Path=/api/v1/motherboards,/api/v1/motherboards/**,/api/v2/motherboards,/api/v2/motherboards/**
+    - id: ram-service
+      uri: lb://ram-service
+      predicates:
+        - Path=/api/v1/rams,/api/v1/rams/**,/api/v2/rams,/api/v2/rams/**
+    - id: storage-service
+      uri: lb://storage-service
+      predicates:
+        - Path=/api/v1/storages,/api/v1/storages/**,/api/v2/storages,/api/v2/storages/**
+    - id: psu-service
+      uri: lb://psu-service
+      predicates:
+        - Path=/api/v1/psus,/api/v1/psus/**,/api/v2/psus,/api/v2/psus/**
